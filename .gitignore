@@ -25,3 +25,6 @@ hs_err_pid*
 # intellij
 **/.idea/workspace.xml
 **/.idea/tasks.xml
+
+# mvn outputs
+**/target/
