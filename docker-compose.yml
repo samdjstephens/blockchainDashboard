@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+#  ledger-scraper:
+#    build: ./ledger_scraper
+
+  zookeeper:
+    image: zookeeper:latest
+
+  kafka:
+    image: wurstmeister/kafka:latest
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://:9091
+    depends_on:
+      - zookeeper
