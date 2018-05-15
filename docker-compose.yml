@@ -1,8 +1,10 @@
 version: '3.1'
 
 services:
-#  ledger-scraper:
-#    build: ./ledger_scraper
+  ledger-scraper:
+    build: ./ledger_scraper
+    depends_on:
+      - kafka
 
   zookeeper:
     image: zookeeper:latest
