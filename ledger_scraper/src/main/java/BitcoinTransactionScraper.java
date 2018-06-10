@@ -2,12 +2,18 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class BitcoinTransactionScraper extends WebSocketClient {
     private static TransactionWriter transactionWriter;
     private static AtomicInteger i = new AtomicInteger(0);
+    private static final String transactionURI = "wss://ws.blockchain.info/inv";
+
+    BitcoinTransactionScraper() throws URISyntaxException {
+        this(new URI(transactionURI));
+    }
 
     BitcoinTransactionScraper(URI uri) {
         super(uri);
