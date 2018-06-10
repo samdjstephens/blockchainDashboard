@@ -13,6 +13,4 @@ services:
     image: wurstmeister/kafka:latest
     environment:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://:9091
-    depends_on:
-      - zookeeper
+      KAFKA_LISTENERS: PLAINTEXT://:9092

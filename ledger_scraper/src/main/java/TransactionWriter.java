@@ -1,8 +1,7 @@
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.*;
 
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 class TransactionWriter {
     static final String TOPIC = "bitcoin-transactions";
@@ -18,20 +17,27 @@ class TransactionWriter {
 
     private TransactionWriter() {
         Properties props = new Properties();
-        props.put("bootstrap.servers", "kafka:9092");
-        props.put("acks", "all");
-        props.put("retries", 0);
-        props.put("batch.size", 16384);
-        props.put("linger.ms", 1);
-        props.put("buffer.memory", 33554432);
-        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+                "org.apache.kafka.common.serialization.StringSerializer");
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
+                "org.apache.kafka.common.serialization.StringSerializer");
+        props.put(ProducerConfig.CLIENT_ID_CONFIG,
+                "BitcoinTransactionWriter");
 
         this.kafkaProducer = new KafkaProducer<>(props);
     }
 
     void sendTransaction(String key, String value) {
-        ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, key, value);
-        this.kafkaProducer.send(record);
+        System.out.println("Sending message");
+        try {
+            ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, key, value);
+            // TODO: Remove after development is complete
+            RecordMetadata metadata = this.kafkaProducer.send(record).get(3, TimeUnit.SECONDS);
+            System.out.println(metadata.toString());
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
     }
 }

@@ -4,6 +4,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import java.net.URI;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
 public class BitcoinTransactionScraper extends WebSocketClient {
     private static TransactionWriter transactionWriter;
     private static AtomicInteger i = new AtomicInteger(0);
