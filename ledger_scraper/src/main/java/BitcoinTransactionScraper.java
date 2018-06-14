@@ -3,20 +3,21 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 public class BitcoinTransactionScraper extends WebSocketClient {
     private static TransactionWriter transactionWriter;
-    private static AtomicInteger i = new AtomicInteger(0);
-    private static final String transactionURI = "wss://ws.blockchain.info/inv";
+    private static AtomicLong i = new AtomicLong(0);
+    private static final String TRANSACTION_URI = "wss://ws.blockchain.info/inv";
 
     BitcoinTransactionScraper() throws URISyntaxException {
-        this(new URI(transactionURI));
+        this(new URI(TRANSACTION_URI));
     }
 
     BitcoinTransactionScraper(URI uri) {
         super(uri);
+        // TODO: Should be injected
         transactionWriter = TransactionWriter.getInstance();
     }
 
@@ -27,7 +28,7 @@ public class BitcoinTransactionScraper extends WebSocketClient {
 
     public void onMessage(String s) {
         System.out.println("Message received");
-        transactionWriter.sendTransaction(Integer.toString(i.incrementAndGet()), s);
+        transactionWriter.sendTransaction(i.incrementAndGet(), s);
     }
 
     public void onClose(int i, String s, boolean b) {

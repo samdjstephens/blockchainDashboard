@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 class TransactionWriter {
     static final String TOPIC = "bitcoin-transactions";
-    private final Producer<String, String> kafkaProducer;
+    private final Producer<Long, String> kafkaProducer;
     private static TransactionWriter INSTANCE;
 
     static TransactionWriter getInstance() {
@@ -19,7 +19,7 @@ class TransactionWriter {
         Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
-                "org.apache.kafka.common.serialization.StringSerializer");
+                "org.apache.kafka.common.serialization.LongSerializer");
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
                 "org.apache.kafka.common.serialization.StringSerializer");
         props.put(ProducerConfig.CLIENT_ID_CONFIG,
@@ -28,10 +28,9 @@ class TransactionWriter {
         this.kafkaProducer = new KafkaProducer<>(props);
     }
 
-    void sendTransaction(String key, String value) {
-        System.out.println("Sending message");
+    void sendTransaction(Long key, String value) {
         try {
-            ProducerRecord<String, String> record = new ProducerRecord<>(TOPIC, key, value);
+            ProducerRecord<Long, String> record = new ProducerRecord<>(TOPIC, key, value);
             // TODO: Remove after development is complete
             RecordMetadata metadata = this.kafkaProducer.send(record).get(3, TimeUnit.SECONDS);
             System.out.println(metadata.toString());
